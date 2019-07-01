@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 import urllib.request
 import re
 import csv
+import logging
 from pathlib import Path
 
 
@@ -17,13 +20,15 @@ SPECLIST_URL = 'https://www.uniprot.org/docs/speclist.txt'
 SPECLIST_PATH = Path('./speclist.txt')
 SPECLIST_CSV_PATH = Path('./speclist.csv')
 
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+
 
 def get_records_from_speclist():
 
     record = None
 
-    with open('data/speclist.txt') as f:
-        for line in f:
+    with SPECLIST_PATH.open() as speclist_file:
+        for line in speclist_file:
             line = line.rstrip()
 
             # Have me matched a primary row e.g.
@@ -48,12 +53,28 @@ def get_records_from_speclist():
 
 
 def download_speclist_file():
-
     urllib.request.urlretrieve(SPECLIST_URL, SPECLIST_PATH)
 
 
+def get_column_names():
+    # Use the regex named groups for the column names
+    return list(re_primary.groupindex.keys()) + \
+        list(re_secondary.groupindex.keys())
+
+
 def main():
+    logging.info(f'Downloading {SPECLIST_URL}')
+
     download_speclist_file()
+
+    with SPECLIST_CSV_PATH.open('w') as csvfile:
+        csv_writer = csv.DictWriter(csvfile, fieldnames=get_column_names())
+        csv_writer.writeheader()
+
+        for i, record in enumerate(get_records_from_speclist()):
+            csv_writer.writerow(record)
+
+    logging.info(f'Created speclist.csv with {i} records')
 
 
 if __name__ == "__main__":
