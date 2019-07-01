@@ -1,9 +1,9 @@
 # Speclist to CSV
 
-Converts the UniProt speclist.txt (https://www.uniprot.org/docs/speclist.txt) to CSV file speclist.csv
+Converts the UniProt speclist.txt (https://www.uniprot.org/docs/speclist.txt) to CSV file.
 
 
-speclist.txt:
+Input (speclist.txt):
 
 ```
 ABEMA E  183220: N=Abelmoschus manihot
@@ -11,7 +11,7 @@ ABEMA E  183220: N=Abelmoschus manihot
                  S=Hibiscus manihot
 ```
 
-speclist.csv: 
+Output (speclist.csv): 
 
 ```
 code,kingdom,taxon_node,scientific_name,common_name,synonym
